@@ -10,10 +10,3 @@ Array.prototype.xmap = function (callback){
     }
     return newArr
 }
-let arr = [{'name': '张三',age: 20},{'name': '李四', age: 22}]
-let obj ={}
-arr.xmap((item,index) =>{
-    console.log(item.name,index)
-    return item.age ++
-},obj)
-console.log(arr)

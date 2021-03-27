@@ -47,3 +47,15 @@ function throttle(fn, delay){
         }
     }
 }
+
+let a  = 3011
+console.log((a+'').split('').reduce((a,b) => Number(a)+Number(b)))
+
+
+var a = 10;
+(function () {
+    console.log(a)
+    a = 5
+    // console.log(window.a)
+    var a = 20;
+    console.log(a)})()

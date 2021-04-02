@@ -1,4 +1,4 @@
-# ECMA学习之路
+# 前端学习之ES6
 
 ## 1、var、let、const的区别
 

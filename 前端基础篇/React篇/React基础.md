@@ -57,3 +57,21 @@ HOC可以用于：
 * props处理
 
   
+
+## 6、React的生命周期
+
+* `componentsWillMount`：在渲染之前执行，用于跟组件中的App配置
+
+* `componentDidMount`：在第一次渲染之后执行，可以再这里做AJAX请求，DOM的操作或状态更新以及设置事件监听器
+
+* `componentWillReceiveProps`：在初始化render的时候不会执行，它会在组件接受到新的状态时被触发。一般用于父组件状态更新时组件的重新渲染
+
+* `shouldComponentUpdate`：确定是否更新组件。默认情况下，他返回true。如果确定在state或props更新后组件不需要再重新渲染，则返回false，这是一个高性能方法
+
+* `componentWillUpdate`：在shouldComponentUpdate返回true需要更新组件之前执行
+
+* `componentDidUpdate`：它主要用于更新DOM以响应props或state更改
+
+* `componentWillUnmount`：它用于取消任何的网络请求，或删除与组件关联的所有事件监听
+
+  

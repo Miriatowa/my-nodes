@@ -237,3 +237,27 @@ Array.isArray("foobar");     // false
 Array.isArray(undefined);    // false
 ```
 
+## 10、null和undefined的区别
+
+#### null
+
+null用来表示尚未存在的对象，常用来表示函数企图返回一个不存在的对象，转换为数值为0；
+
+##### 典型用法：
+
+* 作为函数的参数，表示该函数的参数不是对象。
+* 作为原型链的终点
+
+#### undefined
+
+undefined用来表示‘缺少值’，就是此处应该有一个值，但是还没有定义。转化为数值是NAN
+
+##### 典型用法：
+
+* 当声明的变量还未被初始化，变量的默认值是undefined
+* 调用函数时，应该提供的参数没有提供，该参数默认值为undefined
+* 对象没有赋值的属性，该属性的值为undefined
+* 函数没有返回值时，默认返回undefined
+
+
+

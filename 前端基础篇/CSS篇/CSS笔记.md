@@ -99,3 +99,32 @@ DOM的变化影响到了预算内的几何属性比如：宽高，浏览器重�
 | scrollIntoView()        | scrollTo()               | getComputedStyle() |            |
 | getBoundingClientRect() | scrollIntoViewIfNeeded() |                    |            |
 
+## 6、使用css画三角形
+
+#### 伪元素+定位：
+
+使用伪元素相对自身元素定位，是boder的其中三边为透明其中一边为正常可得到对应的三角形
+
+```html
+//html代码
+<div class='breadcrumb-title'>首页</div>
+```
+
+```css
+//css代码
+.breadcrumb-title{
+	position: relative;
+	text-align: center;
+}
+.breadcrumb-title::after{
+    content: '';
+	position: absolute;
+	top: 40px;
+	left: 60px;
+	border-left: 12px solid transparent;
+	border-right: 12px solid transparent;
+	border-top: 12px solid #1890ff;
+	border-bottom: 12px solid transparent;
+}
+```
+

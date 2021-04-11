@@ -164,12 +164,12 @@ keep-alive式vue内置的一个组件，可以使用被包含的组件保留状�
 
 组件是用来复用的，且js里对象是引用关系，如果组件中的data是一个对象，那么这样作用域没有隔离，子组件中的data属性值会相互影响，如果组件中的data是一个函数，那么每个实例可以维护一份被返回对象的独立的拷贝，组件实例之间的data属性值不会相互影响；而new vue实例，是不会被复用，因此不存在引用对象的问题
 
-## 9、v-model的原理？
+## 9、v-model双向数据绑定原理
 
 在vue项目中主要用v-model指令在表单input、textarea、select等元素创建双向绑定。v-modle本质上是语法糖，v-model在内部为不同的输入元素使用不同的属性并抛出不同的事件：
 
 * text和textarea元素使用value属性和input事件
-* checkbook和radio使用checked属性和change事件；
+* checkbook和radio使用checked属性和change事件
 * select字段将value作为prop并将change作为事件
 
 

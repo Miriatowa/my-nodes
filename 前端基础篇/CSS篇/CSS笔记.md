@@ -128,3 +128,217 @@ DOM的变化影响到了预算内的几何属性比如：宽高，浏览器重�
 }
 ```
 
+## 7、css选择器优先级
+
+！import  > inline  > id > class > tag >  *  >  inherit   > default
+
+* !import:   优先级最高
+* 行内：1000
+* id选择器：100
+* 类、伪类和属性选择器：10
+* 类型选择器和伪元素选择器： 1
+* 通配符、子选择器、相邻选择器： 0
+
+同级别的后写的优先级高
+
+## 8、三栏布局
+
+左右固定宽度，中间自适应
+
+#### 使用浮动（float）
+
+```html
+<style>
+		.left{
+			float: left;
+			width: 300px;
+			height: 100px;
+			background-color: #631D9F;
+		}
+		.mid{
+			margin-left: 300px;
+			margin-right: 300px;
+            height: 100px;
+			background-color: #4990E2;
+		}
+		.right{
+			float: right;
+			width: 300px;
+			height: 100px;
+			background-color: #499012;;
+		}
+	</style>
+	<body>
+			<div class="left">左</div>
+			<div class="right">右</div>
+			<div class="mid">中</div>
+	</body>
+```
+
+#### 使用定位（position）
+
+```html
+<style>
+		.left{
+			position: absolute;
+			left: 0;
+			width: 300px;
+			height: 100px;
+			background-color: #631D9F;
+		}
+		.mid{
+			position: absolute;
+			left: 300px;
+			right: 300px;
+			height: 100px;
+			background-color: #4990E2;
+		}
+		.right{
+			position: absolute;
+			right:0;
+			width: 300px;
+			height: 100px;
+			background-color: #499012;;
+		}
+	</style>
+	<body>
+			<div class="left">左</div>
+			<div class="right">右</div>
+			<div class="mid">中</div>
+	</body>
+```
+
+#### 使用弹性布局（flex）
+
+```html
+<style>
+		.main{
+			display: flex;
+		}
+		.left{
+			width: 300px;
+			height: 100px;
+			background-color: #631D9F;
+		}
+		.mid{
+			flex: 1;
+			height: 100px;
+			background-color: #4990E2;
+		}
+		.right{
+			width: 300px;
+			height: 100px;
+			background-color: #499012;;
+		}
+	</style>
+	<body>
+		<div class="main">
+			<div class="left">左</div>
+			<div class="mid">中</div>
+			<div class="right">右</div>
+		</div>
+	</body>
+```
+
+## 9、css过渡和动画
+
+#### 过渡
+
+transition过渡将变化按照设置时间长度缓慢执行完毕
+
+##### 属性
+
+| 属性                                                         | 描述                                         | CSS  |
+| :----------------------------------------------------------- | :------------------------------------------- | :--- |
+| [transition](https://www.runoob.com/cssref/css3-pr-transition.html) | 简写属性，用于在一个属性中设置四个过渡属性。 | 3    |
+| [transition-property](https://www.runoob.com/cssref/css3-pr-transition-property.html) | 规定应用过渡的 CSS 属性的名称。              | 3    |
+| [transition-duration](https://www.runoob.com/cssref/css3-pr-transition-duration.html) | 定义过渡效果花费的时间。默认是 0。           | 3    |
+| [transition-timing-function](https://www.runoob.com/cssref/css3-pr-transition-timing-function.html) | 规定过渡效果的时间曲线。默认是 "ease"。      | 3    |
+| [transition-delay](https://www.runoob.com/cssref/css3-pr-transition-delay.html) | 规定过渡效果何时开始。默认是 0。             | 3    |
+
+##### 局限性
+
+* transition需要事件触发，所以没法在网页加载时自动发生
+* transition是一次性的，不能重复发生，除非一再触发
+* transition只能定义初始和结束状态，无法定义中间状态
+* 一条translation规则，只能定义一个属性的变化，不能涉及多个属性
+
+#### 动画
+
+使用@keyframes 规则是创建动画，@keyframes 规则内指定一个 CSS 样式和动画将逐步从目前的样式更改为新的样式。
+
+##### 属性
+
+| 属性                                                         | 描述                                                         | CSS  |
+| :----------------------------------------------------------- | :----------------------------------------------------------- | :--- |
+| [@keyframes](https://www.runoob.com/cssref/css3-pr-animation-keyframes.html) | 规定动画。                                                   | 3    |
+| [animation](https://www.runoob.com/cssref/css3-pr-animation.html) | 所有动画属性的简写属性。                                     | 3    |
+| [animation-name](https://www.runoob.com/cssref/css3-pr-animation-name.html) | 规定 @keyframes 动画的名称。                                 | 3    |
+| [animation-duration](https://www.runoob.com/cssref/css3-pr-animation-duration.html) | 规定动画完成一个周期所花费的秒或毫秒。默认是 0。             | 3    |
+| [animation-timing-function](https://www.runoob.com/cssref/css3-pr-animation-timing-function.html) | 规定动画的速度曲线。默认是 "ease"。                          | 3    |
+| [animation-fill-mode](https://www.runoob.com/cssref/css3-pr-animation-fill-mode.html) | 规定当动画不播放时（当动画完成时，或当动画有一个延迟未开始播放时），要应用到元素的样式。 | 3    |
+| [animation-delay](https://www.runoob.com/cssref/css3-pr-animation-delay.html) | 规定动画何时开始。默认是 0。                                 | 3    |
+| [animation-iteration-count](https://www.runoob.com/cssref/css3-pr-animation-iteration-count.html) | 规定动画被播放的次数。默认是 1。                             | 3    |
+| [animation-direction](https://www.runoob.com/cssref/css3-pr-animation-direction.html) | 规定动画是否在下一周期逆向地播放。默认是 "normal"。          | 3    |
+| [animation-play-state](https://www.runoob.com/cssref/css3-pr-animation-play-state.html) | 规定动画是否正在运行或暂停。默认是 "running"。               |      |
+
+##### 示例
+
+```css
+.at_chest {
+		position: absolute;
+		width: 300rpx;
+		height: 300rpx;
+		left: 225rpx;
+		top: 520rpx;
+		animation: rotate .5s linear infinite;
+	}
+
+@keyframes rotate {
+		0% {
+			transform: translateY(0);
+		}
+
+		25% {
+			transform: translateY(16rpx);
+		}
+
+		50% {
+			transform: translateY(32rpx) scale(1.1, 0.9);
+
+		}
+
+		75% {
+			ransform: translateY(16rpx);
+		}
+
+		100% {
+			transform: translateY(0);
+		}
+	}
+```
+
+## 10、移动端适配方案
+
+### @media + rem适配
+
+@media媒体查询， 可以针对不同的屏幕尺寸设置不同的样式，特别是如果你需要设置设计响应式的页面。采用@media + rem适配移动端还有一个不可少的条件就是要在head标签中写入一个meta标签。 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1">
+
+```css
+//以下实例在屏幕可视窗口尺寸小于 600 像素时将 div 元素隐藏：
+@media screen and (max-width: 600px) {
+  div.example {
+    display: none;
+  }
+}
+```
+
+### 手机淘宝 flexible.js适配
+
+flexible.js也是rem适配的，它是将设备分成10份，1rem等于1/10
+
+### vw,vh进行适配
+
+vw:viewport width(可视窗口宽度)
+vh:viewport height(可视窗口高度)
+1vw等于1%的设备宽度(设计稿宽度)，1vh等于1%的设备高度(设计稿高度),这样看来vw,vh其它是最方便的，但是目前兼容性不是特别好

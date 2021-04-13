@@ -114,13 +114,72 @@ const config ={
 
 ## 4、打包html资源
 
-```
+```javascript
 const HtmlWepackPlugin = require('html-wepack-plugin')
 const config ={
     plugin: [
     	//功能：默认创建一个空的HTML，自动引入打包输出的所有资源
     	new HtmlWebpackPlugin({template: './src/index.html'})
     ]
+}
+```
+
+## 5、打包图片资源
+
+```javascript
+const config ={
+    module: {
+        rules: [{
+            test: /\.(jpg|png|gif)$/,
+            loader: 'url-loader',
+            options: {
+                //图片大小小于8kb，就会被base64处理
+                //优点：减少请求数量
+                //缺点：图片体积会更大
+                limit: 8 * 1024，
+                name: '[hash:10].[ext]',
+                //关闭es6模块化
+                esModule: false
+            }
+        },
+        {
+            //处理html中的img资源
+            test: /\.html$/,
+            loader: 'html-loader'
+        }
+        ]
+    }
+}
+```
+
+## 6、打包其它资源
+
+```javascript
+const config ={
+	//打包其它资源
+    module: {
+        rules: [{
+           //排除css/js/html
+           exclude: /\.(css|js|html)$/,
+           loader: 'file-loader'
+        }]
+    }
+}
+```
+
+## 7、自动编译devServer
+
+```javascript
+const config ={
+	devServer: {
+		contentBase: reslove(__dirname, 'build'),
+		//启动gzip压缩
+		compress: true,
+		//端口号
+		port: 3000,
+		//自动打开浏览器
+		open: true
+	}
 }
 ```
 

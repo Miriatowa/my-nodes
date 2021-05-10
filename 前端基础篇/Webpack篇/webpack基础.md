@@ -85,6 +85,8 @@ module.exports = {
 
 ## 3、打包css样式资源
 
+#### 1.解析css代码
+
 ```javascript
 const config ={
     module: {
@@ -111,6 +113,52 @@ const config ={
     }
 }
 ```
+
+#### 2.处理css兼容性
+
+```javascript
+const config ={
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                //use数组中的loader执行顺序：从左到右，从上到下，依次执行
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    {
+                        loader: 'post-loader',
+                        options: {
+                            ident: 'postcss',
+                            plugin: () => {
+                                //帮postcss找到package.json中的browserlist里面的配置，通过配置
+                                //加载指定的css兼容性样式
+                                require('postcss-preset-env')()
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
+```
+
+#### 3.压缩css
+
+```javascript
+const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
+const webpack = require('webpack'); // 用于访问内置插件
+
+const config = {
+  plugins: [
+    //压缩css
+    new OptimizeCssAssetsWebpackPlugin()
+  ]
+};
+```
+
+
 
 ## 4、打包html资源
 
@@ -179,6 +227,9 @@ const config ={
 		port: 3000,
 		//自动打开浏览器
 		open: true
+        //HMR: hot module replacement 热模块替换
+        //作用：一个模块发生变化，只会重新打包这一个模块
+        hot: true
 	}
 }
 ```

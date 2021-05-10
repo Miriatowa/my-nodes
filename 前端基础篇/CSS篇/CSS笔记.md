@@ -342,3 +342,28 @@ flexible.js也是rem适配的，它是将设备分成10份，1rem等于1/10
 vw:viewport width(可视窗口宽度)
 vh:viewport height(可视窗口高度)
 1vw等于1%的设备宽度(设计稿宽度)，1vh等于1%的设备高度(设计稿高度),这样看来vw,vh其它是最方便的，但是目前兼容性不是特别好
+
+## 11、文本显示省略
+
+#### 单行文本
+
+```css
+ overflow: hidden;  /*超出部分隐藏*/
+ text-overflow:ellipsis; /* 超出部分显示省略号 */
+ white-space: nowrap; /*规定段落中的文本不进行换行 */
+```
+
+#### 多行文本
+
+> **-webkit-line-clamp**用来限制在一个块元素显示的文本的行数。 为了实现该效果，它需要组合其他的WebKit属性。常见结合属性：
+> display: -webkit-box 必须结合的属性 ，将对象作为弹性伸缩盒子模型显示 。
+> -webkit-box-orient 必须结合的属性 ，设置或检索伸缩盒对象的子元素的排列方式 
+
+```css
+display: -webkit-box;
+-webkit-box-orient: vertical;
+-webkit-line-clamp: 3;
+overflow: hidden;
+
+```
+

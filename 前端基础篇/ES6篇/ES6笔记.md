@@ -77,3 +77,29 @@ function sum(...args){
 sum(1,2,3)
 ```
 
+## 6、基本数据类型BigInt
+
+#### 概述
+
+**`BigInt`** 是一种内置对象，它提供了一种方法来表示大于 2<sup>53</sup> -1的整数。这原本是 Javascript中可以用 [`Number`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number) 表示的最大数字。**`BigInt`** 可以表示任意大的整数。
+
+#### 示例
+
+可以用在一个整数字面量后面加 `n` 的方式定义一个 `BigInt` ，如：`10n`，或者调用函数`BigInt()`。
+
+```javascript
+const theBiggestInt = 9007199254740991n;
+
+const alsoHuge = BigInt(9007199254740991);
+// ↪ 9007199254740991n
+
+const hugeString = BigInt("9007199254740991");
+// ↪ 9007199254740991n
+
+const hugeHex = BigInt("0x1fffffffffffff");
+// ↪ 9007199254740991n
+
+const hugeBin = BigInt("0b11111111111111111111111111111111111111111111111111111");
+// ↪ 9007199254740991n
+```
+

@@ -12,7 +12,7 @@ Git是一个版本管理控制系统(缩写VCS),它可以在任何时间点，�
 | ---------------- | ------------------ | ------------------- |
 | 用于存放提交记录 | 临时存放被修改文件 | 被git管理的项目目录 |
 
-<img src="C:\Users\余洵杰\AppData\Roaming\Typora\typora-user-images\image-20210510093407720.png" alt="image-20210510093407720" style="zoom:67%;" />
+<img src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-f8040833-b067-4f14-836a-a9837f7dab99/c1fe35ec-e698-482c-9d4d-b834a4f6d149.png" style="zoom:67%;" />
 
 ### 1.3 git的使用
 
@@ -42,7 +42,7 @@ Git是一个版本管理控制系统(缩写VCS),它可以在任何时间点，�
 * 将文件从暂存区中删除：`git rm --cached 文件`
 * 将git仓库中指定的更新记录恢复出来，并且覆盖暂存区和工作目录： `git rest --hard commitID`
 
-<img src="C:\Users\余洵杰\AppData\Roaming\Typora\typora-user-images\image-20210510111331211.png" alt="image-20210510111331211" style="zoom: 67%;" />
+<img src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-f8040833-b067-4f14-836a-a9837f7dab99/cb9bf6e2-9313-483d-b272-5ef36ad081d6.png" style="zoom:67%;" />
 
 ## 2.git进阶
 
@@ -50,13 +50,13 @@ Git是一个版本管理控制系统(缩写VCS),它可以在任何时间点，�
 
 分支可以认为是当前工作目录中代码的一份副本。使用分支，可以让我们从开发主线分离出来，以免影响开发主线。
 
-<img src="C:\Users\余洵杰\AppData\Roaming\Typora\typora-user-images\image-20210511090935973.png" alt="image-20210511090935973" style="zoom: 50%;" />
+<img src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-f8040833-b067-4f14-836a-a9837f7dab99/9e6ba174-9ffa-4b04-954f-a61f88eda980.png" style="zoom:67%;" />
 
 #### 2.1.1 分支明细
 
 1. 主分支（master）：第一次向git仓库中提交更新记录时自动产生的一个分支
 
-   <img src="C:\Users\余洵杰\AppData\Roaming\Typora\typora-user-images\image-20210511091408405.png" alt="image-20210511091408405" style="zoom:67%;" />
+   <img src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-f8040833-b067-4f14-836a-a9837f7dab99/3c257ba3-2a78-4eb8-bc19-4903bd31d2bd.png" style="zoom: 67%;" />
 
 2. 开发分支（develop）：作为开发的分支，基于master分支创建
 
@@ -78,3 +78,56 @@ Git是一个版本管理控制系统(缩写VCS),它可以在任何时间点，�
 * 存储临时改动：`git stash`
 * 恢复改动：`git stash pop`
 
+### 2.3 提交
+
+* 提交到远程：`git push {远程仓库地址} {分支名称}`
+* 提交到本地：`git commit -m {提交信息}`
+* 拉取远程仓库最新版本：`git pull {远程仓库地址} {分支名称}`
+
+## 3  git工作
+
+### 3.1 多人协作开发流程
+
+* A在自己得计算机中创建本地仓库
+* A在github中创建远程仓库
+* A将本地仓库推送到远程仓库：`git push {远程仓库地址(origin)} {分支名称}`
+* B克隆远程仓库到本地进行开发： `git clone {远程仓库地址}`
+* B将本地仓库中开发得内容推送到远程仓库
+* A将远程仓库中得最新内容拉去到本地: `git pull {远程仓库地址(origin)} 分支名称`
+
+<img src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-f8040833-b067-4f14-836a-a9837f7dab99/83d67592-605d-4dac-b695-8058a41cacf8.png" style="zoom: 67%;" />
+
+<img src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-f8040833-b067-4f14-836a-a9837f7dab99/4ed90641-576e-4302-826c-4a1f82587050.png" style="zoom:50%;" />
+
+### 3.2 多人开发冲突
+
+在多人同时开发一个项目时，如果两个人修改了同一个文件的同一个地方，就会发生冲突。冲突需要人为解决
+
+### 3.3 跨团队协作
+
+1. 程序员c fork仓库
+2. 程序员c 将仓库克隆子啊本地进行修改
+3. 程序员c 将仓库推送到远程
+4. 程序员c发起pull request
+5. 远仓库作者审核
+6. 原仓库作者合并代码
+
+
+
+### 3.4 SSH免登录
+
+SSH协议通过验证公钥和私钥是否匹配决定验证是否通过
+
+<img src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-f8040833-b067-4f14-836a-a9837f7dab99/4b1711df-87ad-4931-9d48-42e6f85805d2.jpg" style="zoom:50%;" />
+
+* 生成密钥：ssh-keygen
+
+* 秘钥存储目录：C:\Users\用户\.ssh
+
+* 公钥名称：id_rsa.pub
+
+<img src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-f8040833-b067-4f14-836a-a9837f7dab99/e1d1b27e-a72e-44c5-a590-094e373038a8.jpg" style="zoom: 80%;" />
+
+需要放在github服务器中，打开文件全选复制，头像settings-SSH and GPG keys
+
+* 私钥名称：id_rsa

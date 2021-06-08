@@ -84,6 +84,17 @@ Git是一个版本管理控制系统(缩写VCS),它可以在任何时间点，�
 * 提交到本地：`git commit -m {提交信息}`
 * 拉取远程仓库最新版本：`git pull {远程仓库地址} {分支名称}`
 
+### 2.4 远程仓库操作
+
+* 载入远程仓库，查看信息：`git remote -v`
+
+* 添加远程版本库：`git remote add {名称(master)}  {git地址}`  如：
+
+  `git remote add origin git@github.com:tianqixin/runoob-git-test.git`
+
+* 删除远程仓库： `git remote rm {别名}`
+* 修改仓库名：`git remote rename {旧别名} {新别名}`
+
 ## 3  git工作
 
 ### 3.1 多人协作开发流程

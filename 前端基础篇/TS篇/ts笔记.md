@@ -20,6 +20,7 @@ greeter(user)
 interface Person {
   name: string;
   hobby?: string    //加？是可选属性
+  [propName: string]: any   //多选
 }
 function introduction(perseon: Person){
   return "Hello,I'm"+ person.name+".I like "+ person.hobby
@@ -29,7 +30,6 @@ introduction(user)
 ```
 
 ### 3、基础类型
-
 为了让程序有价值，我们需要能够处理最简单的数据单元：数字，字符串，结构体，布尔值等。 TypeScript支持与JavaScript几乎相同的数据类型，此外还提供了实用的枚举类型方便我们使用。
 
 | 类型    | 例子              | 描述                           |
@@ -42,7 +42,7 @@ introduction(user)
 | unknown | *                 | 类型安全的any                  |
 | void    | 空值（undefined） | 没有值或者undefined            |
 | never   | 没有值            | 不能是任何值                   |
-| object  | {name:   'TS'}    | 任意的js对象                   |
+| object  | {name: 'TS'}      | 任意的js对象                   |
 | array   | [1,2,3]           | 任意js数组                     |
 | tuple   | [4,5]             | 元祖，TS新增类型，固定长度数组 |
 | enum    | enum[A,B]         | 枚举，TS中新增的类型           |

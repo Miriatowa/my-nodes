@@ -29,8 +29,7 @@ let user = { name: 'Miraitowa', hobby: 'codding'}
 introduction(user)
 ```
 
-## 3、基础类型
-
+### 3、基础类型
 为了让程序有价值，我们需要能够处理最简单的数据单元：数字，字符串，结构体，布尔值等。 TypeScript支持与JavaScript几乎相同的数据类型，此外还提供了实用的枚举类型方便我们使用。
 
 | 类型    | 例子              | 描述                           |
@@ -140,4 +139,3 @@ let strLength: number = (someValue as string).length;
 ```
 
 两种形式是等价的。 至于使用哪个大多数情况下是凭个人喜好；然而，当你在TypeScript里使用JSX时，只有`as`语法断言是被允许的。
-

@@ -114,10 +114,28 @@ Git是一个版本管理控制系统(缩写VCS),它可以在任何时间点，�
 
 在多人同时开发一个项目时，如果两个人修改了同一个文件的同一个地方，就会发生冲突。冲突需要人为解决
 
+#### 3.2.1 冲突实例
+
+当`git pull`拉取最新代码时，遇到以下情况：
+
+<img src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-f8040833-b067-4f14-836a-a9837f7dab99/4dc0cf90-14ea-4505-8567-957c9730e84a.png" style="zoom:50%;" />
+
+
+
+在出现这种情况时需要你输入新的merge信息的终端窗口，在最上面的提示句下有一行空格，按照链接的帮助，按”i”进入输入模式，随便输入个什么，然后 ESC，直接输入”:wq”你会发现这个出现在终端的最下面，这是OK的，最后 enter，就OK了。
+
+
+
+当push代码的时候，别人已经更新代码
+
+<img src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-f8040833-b067-4f14-836a-a9837f7dab99/cc22db4c-a781-49c0-ac88-077e6d277b5d.png" style="zoom:80%;" />
+
+在出现这种情况时，可以输入`git merge --abort`或者`git reset --merge`
+
 ### 3.3 跨团队协作
 
 1. 程序员c fork仓库
-2. 程序员c 将仓库克隆子啊本地进行修改
+2. 程序员c 将仓库克隆到本地进行修改
 3. 程序员c 将仓库推送到远程
 4. 程序员c发起pull request
 5. 远仓库作者审核

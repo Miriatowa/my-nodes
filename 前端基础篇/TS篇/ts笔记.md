@@ -49,17 +49,28 @@ introduction(user)
 
 #### 3.1 数组
 
-TypeScript像JavaScript一样可以操作数组元素。 有两种方式可以定义数组。 第一种，可以在元素类型后面接上`[]`，表示由此类型元素组成的一个数组：
+##### 3.1.1 数组	
 
 ```typescript
-let list: number[] = [1, 2, 3];
+let list: number[] = [1, 2, 3];   //元素类型+[]
+let list: Array<number> = [1, 2, 3];  //Array<元素类型>
 ```
 
-第二种方式是使用数组泛型，`Array<元素类型>`：
+##### 3.1.2 类数组	
 
 ```typescript
-let list: Array<number> = [1, 2, 3];
+function(){
+	const args:IArguments = arguments
+}
+//源码
+interface IArguments {
+	[index: number]: any;
+	length: number;
+	callee: Function;
+}
 ```
+
+
 
 #### 3.2 元祖 Tuple
 

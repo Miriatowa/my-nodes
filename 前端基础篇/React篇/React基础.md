@@ -91,3 +91,28 @@ HOC可以用于：
 #### setState同步的情况
 
 在setTimeout或者原生dom事件中，setState是同步
+
+## 9、hooks
+
+#### 9.1 useState
+
+##### 9.1.1 使用规则
+
+* **不要在循环，条件或嵌套函数中调用 Hook，** 确保总是在你的 React 函数的最顶层调用他们。遵守这条规则，你就能确保 Hook 在每一次渲染中都按照同样的顺序被调用
+* **不要在普通的 JavaScript 函数中调用 Hook。**你可以：
+  - ✅ 在 React 的函数组件中调用 Hook
+  - ✅ 在自定义 Hook 中调用其他 Hook
+
+```javascript
+const [count,setcount] = useState(0)
+const onClick = (params) => {
+	setCount(count + 1)
+	console.log(count)   //打印为0，useState为异步
+	setCount((conut) => {
+		count ++
+		return count
+	})
+	console.log(count)   //打印为1
+}
+```
+

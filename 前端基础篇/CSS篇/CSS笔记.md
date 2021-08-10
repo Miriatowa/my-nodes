@@ -367,3 +367,15 @@ overflow: hidden;
 
 ```
 
+## 12、css文字渐变色
+
+在web前端开发过程中，UI设计师经常会设计一些带渐变文字的设计图，在以前我们只能用png的图片来代替文字，可以实现使用纯css实现渐变文字了。
+
+```css
+.gradient_text {
+	background-image: -webkit-linear-gradient(bottom. red, #fd8403, yellow) //为文本元素提供渐变色
+	-webkit-background-clip: text;  //用文本剪辑背景，用渐变背景作为颜色填充文本
+	-webkit-text-fill-cloor: transparent;   //使用透明色填充文本
+}
+```
+

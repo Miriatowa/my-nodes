@@ -81,6 +81,11 @@ Git是一个版本管理控制系统(缩写VCS),它可以在任何时间点，�
 ### 2.3 提交
 
 * 提交到远程：`git push {远程仓库地址} {分支名称}`
+
+  ```
+  $  git push origin feature-branch:feature-branch    //推送本地的feature-branch(冒号前面的)分支到远程origin的feature-branch(冒号后面的)分支(没有会自动创建)
+  ```
+
 * 提交到本地：`git commit -m {提交说明}`
   - feat：新功能（feature）
   - fix：修补bug
@@ -89,6 +94,7 @@ Git是一个版本管理控制系统(缩写VCS),它可以在任何时间点，�
   - refactor：重构（即不是新增功能，也不是修改bug的代码变动）
   - test：增加测试
   - chore：构建过程或辅助工具的变动
+  
 * 拉取远程仓库最新版本：`git pull {远程仓库地址} {分支名称}`
 
 ### 2.4 远程仓库操作

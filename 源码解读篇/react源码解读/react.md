@@ -4,7 +4,7 @@
 
 ### 1.1 渲染过程
 
-<img src="C:\Users\余洵杰\AppData\Roaming\Typora\typora-user-images\image-20210813085745862.png" alt="image-20210813085745862" style="zoom:50%;" />
+<img src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-f8040833-b067-4f14-836a-a9837f7dab99/23b83406-6fe0-4c23-8eab-012d1472b3fa.png" alt="image-20210813085745862" style="zoom: 67%;" />
 
 ### 1.2 手写简化版react、react-dom
 
@@ -98,3 +98,7 @@ const ReactDom = {
 export default ReactDom
 ```
 
+## 2. 组件的状态
+
+* 组件数据源只有两个，一个是父组件传给子组件(单向数据源，不可修改)，一个是内部初始化（通过setState修改）
+* 属性和状态都可以影响视图，改变会引起视图更新

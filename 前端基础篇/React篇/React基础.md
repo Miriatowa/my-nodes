@@ -90,7 +90,7 @@ HOC可以用于：
 
 #### setState同步的情况
 
-在setTimeout或者原生dom事件中，setState是同步
+在setTimeout或者原生dom事件中，setState是同步.在事件处理函数和生命周期函数中是批量更新的
 
 ## 9、hooks
 

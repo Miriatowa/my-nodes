@@ -213,3 +213,184 @@ class Component {
 export default Component;
 ```
 
+## 3. 事件的处理
+
+### 3.1 批量更新state
+
+#### setState批量更新情况：
+
+在组件生命周期或React合成事件中，setState是异步
+
+* setState设计为异步，可以显著的提升性能
+  * 如果每次调用setState都进行一次更新，那么意味着render函数会被频繁地调用，界面重新渲染，这样效率很低
+  * 最好的办法应该是获取到多个更新，之后进行批量更新
+
+* 如果同步更新了state，但是还没有执行render函数，那么state和props不能保持同步
+  * state和props不能保持一致性，会在开发中产生很多问题
+
+#### setState同步的情况
+
+在setTimeout或者原生dom事件中，setState是同步.在事件处理函数和生命周期函数中是批量更新的
+
+### 3.2 Ref
+
+* Refs提供一种方式，允许我们访问DOM节点或在render方法创建的元素
+* 在react渲染生命周期时，表单元素上的value将会覆盖DOM节点的值；
+
+#### 3.2.1 给元素添加ref
+
+```js
+class Wecome extends React.Component{
+  constructor(){
+    super()
+    this.state = {number: 0}
+    this.inputRef = React.createRef()
+  }
+  handleClick = () => {
+    // debugger
+    console.log(this.inputRef.current.value);
+  }
+  render(){
+     return (
+       <div>
+         <input ref={this.state.inputRef}></input>
+         <button onClick={this.handleClick}>ref按钮</button>
+       </div>
+     )
+  }
+}
+```
+
+#### 3.2.3 实现ref
+
+```js
+//挂载类组件
+function  mountClassComponent(vdom){
+    let {type, props, ref} = vdom;
+    let classInstance = new type(props)
+    let renderVdom = classInstance.render();
+    const dom = createDOM(renderVdom)
+    // 把react的current指向组件虚拟dom
+    if(!!ref){
+        ref.current = classInstance
+    }
+    classInstance.oldRenderVdom  = renderVdom
+    return dom
+}
+```
+
+
+
+```js
+// Ref方法
+function createRef(){
+    return {current: null}
+}
+// forwardRef方法
+function forwardRef(FunctionComponent){
+    return class extends Component {
+        render(){
+            return FunctionComponent(this.props, this.props.ref)
+        }
+    }
+}
+```
+
+## 4. 生命周期
+
+![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-f8040833-b067-4f14-836a-a9837f7dab99/7bff8db7-76b2-482f-ae79-4df7a85e5eeb.png)
+
+```js
+class Wecome extends React.Component{
+  static defaultProps = {
+    name: 'miraitowa组件'
+  }
+  constructor(){
+    super()
+    this.state = {number: 0}
+    this.inputRef = React.createRef()
+    console.log("生命周期，init");
+  }
+  componentWillMount(){
+    console.log("生命周期，componentWillMount");
+  }
+  componentDidMount(){
+    console.log("生命周期，componentDidMount");
+  }
+  shouldComponentUpdate(){
+    console.log("生命周期，shouldComponentUpdate");
+    return true
+  }
+  componentWillUpdate(){
+    console.log("生命周期，componentWillUpdate");
+  }
+  componentDidUpdate(){
+    console.log("生命周期，componentDidUpdate");
+  }
+  handleClick = () => {
+    this.setState({number: this.state.number+1},() => {
+      console.log("number:",this.state.number);
+    })
+  }
+  render(){
+    console.log("生命周期，render");
+     return (
+       <div>
+         <input ref={this.state.inputRef}></input>
+         <button onClick={this.handleClick}>ref按钮</button>
+       </div>
+    )
+  }
+}
+```
+
+```js
+//类组件生命周期
+function  mountClassComponent(vdom){
+    let {type, props, ref} = vdom;
+    let defaultProps = type.defaultProps || {}
+    let classInstance = new type({...defaultProps,...props})
+    if(classInstance.componentWillMount) classInstance.componentWillMount()
+    let renderVdom = classInstance.render();
+    if(classInstance.componentDidMount) classInstance.componentDidMount()
+    const dom = createDOM(renderVdom)
+    if(!!ref){
+        ref.current = classInstance
+    }
+    classInstance.oldRenderVdom  = renderVdom
+    return dom
+}
+```
+
+```js
+function shouldUpdate(classInstance,nextProps, newState){
+    let willUpdate = true;
+    if(classInstance.shouldComponentUpdate && (!classInstance.shouldComponentUpdate(nextProps,newState))){
+        willUpdate = false
+    }
+    if(nextProps){
+        classInstance.props = nextProps
+        classInstance.state = newState
+    }
+    if(willUpdate){
+        classInstance.forceUpdate()
+    }
+}
+```
+
+```js
+forceUpdate(){
+        if(this.componentWillUpdate){
+            this.componentWillUpdate(this.props, this.state)
+        }
+        let oldRnderVdom = this.oldRenderVdom
+        let oldDOM= findDOM(oldRnderVdom)
+        let newRenderVdom = this.render()
+        compareTwoVdom(oldDOM.parentNode, oldRnderVdom, newRenderVdom)
+        this.oldRnderVdom = newRenderVdom
+        if(this.componentDidUpdate){
+            this.componentDidUpdate(this.props, this.state)
+        }
+    }
+```
+

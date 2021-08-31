@@ -394,3 +394,28 @@ forceUpdate(){
     }
 ```
 
+## 5. hooks
+
+### 5.1 useState
+
+* useState就是一个Hook
+* 通过在函数组件里调用它来给组件添加一些内部state&React会在渲染时保留这个state
+* useState会返回一对值：当前状态和一个让你更新它的函数
+  * 在初始渲染期间，返回的状态与传入的第一个参数值相同
+  * setState函数用于更新state，它接收一个新的state值并将组件的一次重新渲染加入队列
+
+```js
+let scheduleUpdate; //调度更新的方法
+let hookIndex = 0; //当前执行的hook的索引
+let hookState = []; //存放所有的hook状态
+export function useState(initState) {
+    hookState[hookIndex] = hookState[hookIndex] || initState
+    let currentIndex = hookIndex
+    function setState(newState){
+        hookState[currentIndex] = newState;
+        scheduleUpdate();
+    }
+    return [hookState[hookIndex++], setState]
+}
+```
+

@@ -419,3 +419,90 @@ export function useState(initState) {
 }
 ```
 
+### 5.2 useMemo
+
+```js
+export function useMemo(factory,deps) {
+    if(hookState[hookIndex]){
+        let [lastMemo,lastDeps] = hookState[hookIndex];
+        let everySame = deps.everySame((item,index) => item === lastDeps[index])
+        if(everySame){
+            hookIndex++;
+            return lastMemo
+        }else{
+            let newMemo = factory()
+            hookState[hookIndex] = [newMemo,deps]
+            return newMemo
+        }
+    }else{
+        let newMemo = factory();
+        hookState[hookIndex] = [newMemo,deps]
+        return newMemo;
+    }
+}
+```
+
+### 5.3 useCallback
+
+```js
+export function useCallback(callback,deps) {
+    if(hookState[hookIndex]){
+        let [lastcallback,lastDeps] = hookState[hookIndex];
+        let everySame = deps.everySame((item,index) => item === lastDeps[index])
+        if(everySame){
+            hookIndex++;
+            return lastcallback
+        }else{
+            hookState[hookIndex] = [callback,deps]
+            return callback
+        }
+    }else{
+        hookState[hookIndex] = [callback,deps]
+        return callback;
+    }
+}
+```
+
+### 5.4 useRecucer
+
+```js
+export function useReducer(reducer, initialState) {
+    hookState[hookIndex] = hookState[hookIndex] || initialState
+    let currentIndex = hookIndex
+    function dispatch(action) {
+        hookState[currentIndex] = reducer(hookState[hookIndex], action)
+        scheduleUpdate();
+    }
+    return [hookState[hookIndex++], dispatch]
+}
+```
+
+## 6. React路由管理
+
+### 6.1 HashRouter
+
+### 6.2 BrowserRouter
+
+#### 6.2.1 history
+
+* HTML5规范给我们提供了一个history接口
+* HTML5 History API包括两个方法： `history.pushState()` 和`history.replaceState()`,和1个事件`window.onpopstate`
+
+##### 6.2.1.1 pushState
+
+* history.pushState(stateObj, title, url)，向浏览器的历史堆栈压入一个url为设定值的记录，并改变历史堆栈的当前指针至栈顶包括三个参数
+  * 第一个参数用于存储url对应的状态对象，该对象可在onpopstate事件中获取，也可在history对象中获取
+  * 第二个参数是标题
+  * 第三个参数则是设定的url
+
+##### 6.2.1.2 replaceState
+
+* 该方法与pushState参数相同，含义相同
+* 唯一的区别在于replaceState是替换浏览器历史堆栈的当前历史记录为设定的url
+* 需要注意的是replaceState不会改动浏览器堆栈的当前指针
+
+##### 6.2.1.3 onpopstate
+
+* 该事件是window的属性
+* 该事件会在调用浏览器的前进、后退以及执行history.forward、history.back和history.go触发，因为这些操作有一个共性，即修改了历史堆栈的当前指针
+* 在不改变document的前提下，一旦当前指针改变则会触发onpopstate事件

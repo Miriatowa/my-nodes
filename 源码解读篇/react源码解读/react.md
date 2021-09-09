@@ -506,3 +506,239 @@ export function useReducer(reducer, initialState) {
 * 该事件是window的属性
 * 该事件会在调用浏览器的前进、后退以及执行history.forward、history.back和history.go触发，因为这些操作有一个共性，即修改了历史堆栈的当前指针
 * 在不改变document的前提下，一旦当前指针改变则会触发onpopstate事件
+
+### 6.3 手写路由
+
+#### 6.3.1 手写router.js
+
+```js
+import React from 'react'
+import RouterContext from './RouterContext'
+class Router extends React.Component{
+    static computeRootMatch(pathname){
+        return {path:'/',url:'/',params:{},isExact:pathname === '/'}
+    }
+    constructor(props){
+        super(props);
+        this.state = {
+            location: props.history.location
+        }
+        this.unlisten = props.history.listen((location) => {
+            console.log("router",this.props.history,this.state);
+            this.setState({location})
+        })
+    }
+    
+    componentWillUnmount(){
+        this.unlisten()
+    }
+    render(){
+        let value = {
+            location: this.state.location,
+            history: this.props.history,
+            match: Router.computeRootMatch(this.state.location.pathname)
+        }
+        return (
+            <RouterContext.Provider value={value}>
+                {this.props.children}
+            </RouterContext.Provider>
+        )
+    }
+}
+export default Router
+```
+
+#### 6.3.2 手写route.js
+
+```js
+import React from "react";
+import RouterContext from "./RouterContext";
+import matchPath from "../utils/matchPtah";
+class Route extends React.Component{
+    static contextType = RouterContext;
+    render(){
+        console.log("route",this.context);
+        let {history, location} = this.context;
+        let {component: RouteComponent} = this.props;
+        let match = matchPath(location.pathname, this.props)
+        let renderElement = null;
+        let routerProps = {history, location}
+        if(match){
+            renderElement = <RouteComponent {...routerProps}></RouteComponent>
+        }
+        return renderElement
+    }
+}
+export default Route
+```
+
+#### 6.3.3 手写browserRouter.js和hashRouter.js
+
+```js
+import React from "react";
+import { Router } from "../react-router";
+import {createBrowserHistory} from '../history'
+class BrowserRouter extends React.Component{
+    constructor(props){
+        super(props);
+        this.history = createBrowserHistory()
+    }
+    render(){
+        return (
+            <Router history={this.history}>
+                {this.props.children}
+            </Router>
+        )
+    }
+}
+
+
+function createBrowserHistory() {
+    let globalHistory = window.history;
+    console.log("globalHistory",globalHistory);
+    let listeners = [];
+    function go(n) {
+        globalHistory.go(n)
+    }
+    function goback(n) {
+        globalHistory.goback(n)
+    }
+    function goForward(n) {
+        globalHistory.goForward(n)
+    }
+    function push(path,state) {
+        const action = 'PUSH';
+        globalHistory.push(state,null,path)
+        let location = {state,pathname: path};
+        setState({action,location})
+    }
+    function listen(listener) {
+        listeners.push(listener);
+        return function() {
+            listeners = listeners.filter(l => l !== listener)
+        }
+    }
+    function setState(newState) {
+        Object.assign(history,newState)
+        history.length = globalHistory.length
+        listeners.forEach(listener => listener())
+    }
+    const history = {
+        action: 'POP',
+        push,
+        go,
+        goback,
+        goForward,
+        listen,
+        location: {pathname: window.location.pathname,state:globalHistory.state}
+    }
+    return history
+}
+export default createBrowserHistory
+export default  BrowserRouter;
+```
+
+```js
+import React from "react";
+import {Router} from "../react-router";
+import {createHashHistory} from '../history'
+class HashRouter extends React.Component{
+    constructor(props){
+        super(props);
+        this.history = createHashHistory()
+    }
+    render(){
+        return (
+            <Router history={this.history}>
+                {this.props.children}
+            </Router>
+        )
+    }
+}
+function createHashHistory() {
+    let stack = [];
+    let index = -1;
+    let action = 'POP';
+    let state ;
+    let listeners = [];
+    function go(n) {
+        action = 'POP';
+        index += n;
+        let nextLocation = stack[index];
+        state = nextLocation.state;
+        window.location.hash = nextLocation.pathname
+    }
+    function goback() {
+        go(1)
+    }
+    function goForward() {
+        go(-1)
+    }
+    window.addEventListener('hashchange', () => {
+        let pathname = window.location.hash.slice(1)
+        Object.assign(history,{action,location:{pathname,state}})
+        console.log("history",history);
+        if(action === 'PUSH'){
+            stack[++index] = history.location
+        }
+        listeners.forEach(listener => listener())
+    })
+    function push(path,nextState) {
+        action = 'PUSH';
+        state = nextState
+        window.location.hash = path
+    }
+    function listen(listener) {
+        listeners.push(listener);
+        return function() {
+            listeners = listeners.filter(l => l !== listener)
+        }
+    }
+    const history = {
+        action: 'POP',
+        push,
+        go,
+        goback,
+        goForward,
+        listen,
+        location: {pathname: "/",state: undefined}
+    }
+    window.location.hash = window.location.hash ? window.location.hash.slice(1) : ''
+    return history
+}
+export default createHashHistory
+export default HashRouter;
+```
+
+#### 6.3.4  路由匹配函数
+
+```js
+const { pathToRegexp} = require("path-to-regexp");
+function compilePath(path,options) {
+    const keys = [];
+    const regexp = pathToRegexp(path,keys,options)
+    return [keys,regexp]
+}
+
+function matchPath(pathname,options={}) {
+    let {path='/',exact=false,strict=false,sensitive=false} = options
+    let [keys,regexp] = compilePath(path,{end:exact,strict,sensitive})
+    console.log('regexp',regexp);
+    let match = regexp.exec(pathname)
+    if(!match) return null;
+    const [url,...groups] = match;
+    const isExact = pathname === url;
+    if(exact && !isExact) return null;
+    return {
+        path,
+        url,
+        isExact,
+        params:keys.reduce((memo,key,index)=>{
+            memo[key.name] = groups[index]
+            return memo
+        },{})
+    } 
+}
+export default matchPath
+```
+

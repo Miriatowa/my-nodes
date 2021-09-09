@@ -70,6 +70,7 @@ Git是一个版本管理控制系统(缩写VCS),它可以在任何时间点，�
 * `git merge ‘来源分支’ ` 合并分支
 * `git branch -d ’分支名称‘` 删除分支（分支被合并后才允许删除） 
 * `git branch -D ’分支名称‘` 删除分支（分支未被合并后删除） 
+* `git push origin --delete ’远程分支名称‘` 删除远程分支
 
 ### 2.2 暂时保存更改
 
@@ -97,7 +98,45 @@ Git是一个版本管理控制系统(缩写VCS),它可以在任何时间点，�
   
 * 拉取远程仓库最新版本：`git pull {远程仓库地址} {分支名称}`
 
-### 2.4 远程仓库操作
+### 2.4 提交后操作
+
+#### 2.4.1 提交后合并多个commits
+
+```javascript
+# 从HEAD版本开始往过去数3个版本
+$ git rebase -i HEAD~3
+# 合并指定版本号（不包含此版本）
+$ git rebase -i [commitid]
+```
+
+说明：
+
+- `-i（--interactive）`：弹出交互式的界面进行编辑合并
+- `[commitid]`：要合并多个版本之前的版本号，注意：`[commitid]` 本身不参与合并
+
+##### **合并步骤**
+
+1. 查看 log 记录，使用`git rebase -i`选择要合并的 commit
+2. 编辑要合并的版本信息，保存提交，多条合并会出现多次（可能会出现冲突）
+3. 修改注释信息后，保存提交，多条合并会出现多次
+4. 推送远程仓库或合并到主干分支:`git push --force origin master`
+
+##### **冲突解决**
+
+在 `git rebase` 过程中，可能会存在冲突，此时就需要解决冲突。
+
+错误提示信息：`git rebase -i resumeerror: could not apply ...`。
+
+```javascript
+# 查看冲突
+$ git status
+# 解决冲突之后，本地提交
+$ git add .
+# rebase 继续
+$ git rebase --continue
+```
+
+### 2.5 远程仓库操作
 
 * 载入远程仓库，查看信息：`git remote -v`
 

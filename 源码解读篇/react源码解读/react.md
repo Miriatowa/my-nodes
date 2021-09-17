@@ -742,3 +742,27 @@ function matchPath(pathname,options={}) {
 export default matchPath
 ```
 
+## 7.  Redux
+
+### 7.1 Redux应用场景
+
+* 随着js单页应用开发趋向复杂，管理不断变化的state非常困难
+* Redux出现就是为了解决state的数据问题
+* 在React中，数据在组件是单向流动
+* 数据从一个父组件流向子组件，由于非父子关系的组件之间的通信就比较麻烦
+
+<img src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-f8040833-b067-4f14-836a-a9837f7dab99/8bc66956-4e40-467a-9dc9-987100ab9f4e.png" style="zoom:60%;" />
+
+### 7.2 Redux设计思想
+
+* Redux是将整个应用状态存储到一个地方，称为store，里面保存一个状态树state tree
+* 组件可以派发dispatch行为action给store,而不是直接通知其它组件
+* 其它组件可以通过订阅store中的状态来更新视图
+
+<img src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-f8040833-b067-4f14-836a-a9837f7dab99/2a167340-29f3-4873-9e5a-9c6ed330b7ee.png" style="zoom:67%;" />
+
+### 7.3 Redux三大原则
+
+* 整个应用的state都被存储在一颗object tree中，并且object tree值存在于唯一一个store中
+* state是只读的，唯一改变state的方法就是触发action，action是一个用于描述已发生事件的普通对象，使用纯函数来执行修改，为了描述action如何改变state tree，你需要编写reducers
+* 单一数据源的设计让React组件之间的通信更加方便，同时也便于状态的统一管理

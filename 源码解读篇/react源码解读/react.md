@@ -766,3 +766,132 @@ export default matchPath
 * 整个应用的state都被存储在一颗object tree中，并且object tree值存在于唯一一个store中
 * state是只读的，唯一改变state的方法就是触发action，action是一个用于描述已发生事件的普通对象，使用纯函数来执行修改，为了描述action如何改变state tree，你需要编写reducers
 * 单一数据源的设计让React组件之间的通信更加方便，同时也便于状态的统一管理
+
+### 7.4 手写Redux
+
+#### 7.4.1 手写Redux
+
+```js
+function createStore(reducer) {
+    let listeners = [];
+    let state;
+    function getState() {
+        return state
+    }
+    function dispatch(action) {
+        state = reducer(state, action.type)
+        listeners.forEach(listener => listener())
+    }
+    function discribe(listener) {
+        listeners.push(listener)
+        listeners = listeners.filter(l => l !== listener)
+    }
+    dispatch({type: '@@REDUX/INIT'})
+    return {
+        getState,
+        dispatch,
+        discribe
+    }   
+}
+export default createStore
+```
+
+#### 7.4.2 手写react-redux
+
+```js
+import { createContext } from "react";
+const ReactReduxContext = createContext()
+export default ReactReduxContext
+```
+
+```js
+import React from 'react'
+import ReactReduxContext from './ReactReduxContext'
+function Provider(props){
+    return (
+        <ReactReduxContext value={{store: props.store}}>
+            {props.children}
+        </ReactReduxContext>
+    )
+}
+export default Provider
+```
+
+```js
+import React,{useContext,useLayoutEffect,useReducer} from 'react'
+import ReactReduxContext from './ReactReduxContext'
+
+/**
+ * @param mapStateToProps 把仓库中状态映射为当前的组件的属性
+ * @param mapDispathchToProps 把派发动作的方法映射为组件的属性
+ */
+
+function connect(mapStateToProps,mapDispatchToProps) {
+    return function (oldComponent) {
+        return function (props) {
+            const {store} = useContext(ReactReduxContext)
+            const {getState,dispatch,subscribe} = store;
+            const prevState = getState();
+            const stateProps = mapStateToProps(prevState)
+            let dispatchProps;
+            if(typeof mapDispatchToProps === 'function'){
+                dispatchProps = mapDispatchToProps(dispatch)
+            }else if(typeof mapDispatchToProps === 'object'){
+                dispatchProps = bindActionCreators(mapDispatchToProps,dispatch)
+            }else{
+                dispatchProps = {}
+            }
+            const [, foreUpdate] = useReducer(x => x+1, 0)
+            useLayoutEffect(() => {
+               subscribe(foreUpdate)
+            }, [subscribe])
+            return <oldComponent {...props} {...stateProps}></oldComponent>
+        }
+    }
+}
+export default connect
+```
+
+#### 7.4.3 手写react-redux-hooks
+
+```js
+import React  from "react";
+import ReactReduxContext from '../ReactReduxContext'
+function useDispatch(){
+    const {store} = React.useContext(ReactReduxContext);
+    return store.dispatch
+}
+export default useDispatch
+```
+
+```js
+import React from 'react'
+import ReactReduxContext from '../ReactReduxContext'
+
+function useSelectorWithStore(selector, store){
+    let {subscribe, getState} = store;
+    const [,forceUpdate] = React.useReducer(x=> x+1,0);
+    let state = getState()
+    let selectedState =  selector(state);
+    React.useLayoutEffect(()=>{
+        return subscribe(forceUpdate)
+    },[subscribe]);
+    return selectedState
+}
+function useSelector(selector){
+    const {store} = React.useContext(ReactReduxContext);
+    const selectedState = useSelectorWithStore(selector, store);
+    return selectedState 
+}
+export default useSelector
+```
+
+### 7.5 Redux中间件
+
+#### 7.5.1 产生背景
+
+* redux的工作流程是``action -> reducer ``,这是相当于同步操作，由dispatch触发action后，直接去reducer执行相应的动作
+* 但是在某些比较复杂的业务逻辑中，这种同步的实现方式不能很好的解决问题。比如我们有这样一个需求，点击按钮 -> 获取服务器数据 ->渲染视图，因为获取服务器数据是需要异步，所以这时候我就需要引入中间件改变redux同步执行的流程，形成异步流程来实现我们所要的逻辑，有了中间件redux的工作流程就变成``action ->middlewares -> reducer ``,点击按钮就相当于dispatch触发action，接下来去获取服务器数据由middlewares执行，档middlewares成功获取到服务器就去触发reducer对应的操作，更新需要渲染视图的数据
+* 中间件的机制可以让我们改变数据流，实现如异步action、action过滤、日志输出、异常报告等功能
+
+<img src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-f8040833-b067-4f14-836a-a9837f7dab99/2c8580ea-5867-4c16-b4a8-368abfa8ec74.png" style="zoom:67%;" />
